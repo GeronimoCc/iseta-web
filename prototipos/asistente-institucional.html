@@ -256,7 +256,7 @@
       if (!N8N_WEBHOOK_URL.trim()) return demoAnswer(question);
       const response = await fetch(N8N_WEBHOOK_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=UTF-8" },
         body: JSON.stringify({ message: question })
       });
       if (!response.ok) throw new Error("El servicio respondió con estado " + response.status);
