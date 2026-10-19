@@ -1,0 +1,86 @@
+{
+  "name": "Asistente institucional ISETA - prueba de webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "iseta-asistente",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "a7bcf2a2-81c9-4a30-b05d-03e14fcd3001",
+      "name": "Webhook - consulta",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "iseta-asistente-demo"
+    },
+    {
+      "parameters": {
+        "jsCode": "const incoming = $input.first().json;\nlet body = incoming.body ?? incoming;\nif (typeof body === 'string') {\n  try {\n    body = JSON.parse(body);\n  } catch {\n    body = {};\n  }\n}\n\nconst message = typeof body.message === 'string' ? body.message.trim() : '';\nconst maxLength = 500;\n\nif (!message) {\n  return [{ json: {\n    answer: 'Escribí una consulta para que pueda ayudarte.',\n    sources: [],\n    status: 'invalid_input'\n  } }];\n}\n\nif (message.length > maxLength) {\n  return [{ json: {\n    answer: 'La consulta supera el límite de 500 caracteres. Acortala e intentá de nuevo.',\n    sources: [],\n    status: 'invalid_input'\n  } }];\n}\n\nconst normalize = (value) => value.toLocaleLowerCase('es').normalize('NFD').replace(/[\\u0300-\\u036f]/g, '').trim();\nconst query = normalize(message);\n\nconst knowledge = [\n  {\n    terms: ['carrera', 'carreras', 'analisis de sistemas', 'estudiar'],\n    answer: 'El sitio del ISETA incluye una sección de carreras y una página dedicada a la Tecnicatura Superior en Análisis de Sistemas. Para confirmar la oferta académica vigente y sus condiciones, consultá la página institucional.',\n    sources: [{ title: 'Tec. Sup. en Análisis de Sistemas', url: 'https://iseta.edu.ar/iseta/carreras/tec-sup-en-analisis-de-sistemas/' }]\n  },\n  {\n    terms: ['horario', 'horarios', 'cronograma'],\n    answer: 'El sitio dispone de una sección de Horarios. Revisá esa página para consultar la información publicada; este prototipo no puede confirmar si el cronograma tuvo cambios recientes.',\n    sources: [{ title: 'Horarios', url: 'https://iseta.edu.ar/iseta/horarios/' }]\n  },\n  {\n    terms: ['que es iseta', 'instituto', 'quienes son', 'sobre iseta'],\n    answer: 'ISETA significa Instituto Experimental de Tecnología Alimentaria. La sección institucional del sitio presenta información sobre el instituto y su identidad.',\n    sources: [{ title: '¿Quiénes somos?', url: 'https://iseta.edu.ar/iseta/institucionales/quienes-somos/' }]\n  }\n];\n\nconst match = knowledge.find(entry => entry.terms.some(term => query.includes(normalize(term))));\nif (match) {\n  return [{ json: { answer: match.answer, sources: match.sources, status: 'ok' } }];\n}\n\nreturn [{ json: {\n  answer: 'No tengo información verificada suficiente para responder esa consulta en esta versión de prueba. Probá con una pregunta sobre carreras, horarios o información institucional, o consultá directamente el sitio del ISETA.',\n  sources: [{ title: 'Sitio institucional del ISETA', url: 'https://iseta.edu.ar/iseta/' }],\n  status: 'insufficient_context'\n} }];"
+      },
+      "id": "a7bcf2a2-81c9-4a30-b05d-03e14fcd3002",
+      "name": "Validar y responder (demo)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "a7bcf2a2-81c9-4a30-b05d-03e14fcd3003",
+      "name": "Responder al chat",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        760,
+        300
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook - consulta": {
+      "main": [
+        [
+          {
+            "node": "Validar y responder (demo)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar y responder (demo)": {
+      "main": [
+        [
+          {
+            "node": "Responder al chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b61d5d4b-7e41-4d11-90c2-ff320b860001",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
