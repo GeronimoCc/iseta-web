@@ -6,7 +6,9 @@ Este workflow es una **prueba de integración**, no la versión final con IA. Pe
 
 - `package.json` / `package-lock.json`: fijan n8n en la versión exacta `2.44.5`.
 - `start-n8n.mjs`: arranca n8n solo en `127.0.0.1:5678`, con datos en `n8n/.n8n-data/` (ignorado por Git) y sin telemetría.
+- `asistente-institucional-code.js`: fuente editable del nodo Code del workflow.
 - `asistente-institucional-demo.json`: workflow importable de n8n.
+- `scripts/sincronizar-workflow.mjs`: copia el código fuente al nodo Code del JSON, conservando el resto del workflow.
 - `../prototipos/asistente-institucional.html`: página de prueba del asistente, que usa el módulo compartido en modo página.
 - `../assets/asistente-institucional/`: módulo compartido del asistente (`asistente-institucional.js` y `.css`), incluido en todas las páginas públicas del sitio.
 
@@ -37,26 +39,31 @@ Abrí <http://localhost:5678>. La primera vez n8n pide crear una cuenta de propi
 
 ## 1. Importar el workflow
 
-1. Iniciá n8n (sección anterior).
-2. En n8n, creá un workflow vacío, abrí el menú `...` y elegí **Import from file**; seleccioná `asistente-institucional-demo.json`.
-   Alternativa por terminal (probada), con n8n **detenido**, desde `n8n/`:
+Antes de importar cambios al código del asistente, sincronizá el JSON desde la raíz del repositorio:
+
+```powershell
+node n8n/scripts/sincronizar-workflow.mjs
+```
+
+1. Confirmá el ID del workflow que vas a actualizar: `DMFleutloX8wZOxW`.
+2. Detené n8n con `Ctrl+C` y, desde `n8n/`, importá el JSON:
 
    ```powershell
    $env:N8N_USER_FOLDER = "$PWD\.n8n-data"
-   node node_modules\n8n\bin\n8n import:workflow --input=asistente-institucional-demo.json
-   node node_modules\n8n\bin\n8n list:workflow          # muestra el ID
-   node node_modules\n8n\bin\n8n publish:workflow --id=<ID>
+   node node_modules\n8n\bin\n8n import:workflow --input=asistente-institucional-demo.json --activeState=false
+   node node_modules\n8n\bin\n8n list:workflow
    ```
 
-   El JSON versionado incluye el `id` del workflow: reimportarlo actualiza el mismo workflow y no crea un duplicado (el CLI de n8n no tiene comando para borrarlos). Luego iniciá n8n de nuevo: la publicación solo tiene efecto al arrancar.
-3. Guardalo. El flujo contiene tres nodos: Webhook, validación/respuesta de demostración y respuesta HTTP.
-4. No lo publiques ni expongas tu instancia a Internet. Está pensado para una demostración local.
+   El JSON incluye el ID: si existe, la importación actualiza ese workflow. En modo normal, el CLI lo deja inactivo; no uses `--activeState=fromJson`, que n8n limita a Queue/Multi-main. No importes el archivo desde el canvas de un workflow existente: la UI agrega sus nodos al canvas.
+3. Iniciá n8n (`npm.cmd run n8n`, desde `n8n/`), abrí el workflow con ese ID y verificá nombre, tres nodos y ruta `POST /webhook/iseta-asistente`.
+4. En la UI de n8n, elegí **Publish** y confirmá que figure **Published**. La publicación activa el workflow sin requerir otro reinicio.
+5. Mantené n8n en `127.0.0.1`; no publiques el webhook ni expongas la instancia a Internet.
 
 ## 2. Conectar la interfaz con el webhook
 
 La interfaz apunta a `http://localhost:5678/webhook/iseta-asistente` solo cuando la página se abre desde `localhost` o `127.0.0.1`. Esa URL está en `CONFIGURACION.urlDesarrollo` de `assets/asistente-institucional/asistente-institucional.js`, el único archivo donde se configuran las URL del asistente. No hace falta copiar ninguna URL en las páginas.
 
-1. Verificá que el workflow esté **Published** y que n8n esté en marcha. La publicación solo tiene efecto al arrancar n8n: si publicaste con n8n abierto, reiniciá `npm.cmd run n8n`.
+1. Verificá que el workflow esté **Published** y que n8n esté en marcha. Si acabás de importarlo por CLI, iniciá n8n y publicalo desde la UI; no hace falta reiniciarlo después de publicar.
 2. Serví el sitio desde un servidor local de desarrollo, por ejemplo Live Server de VS Code abierto en la raíz del repositorio (`http://127.0.0.1:5500`). Podés probar el prototipo en `http://127.0.0.1:5500/prototipos/asistente-institucional.html` o cualquier página del sitio. Evitá abrirlo con `file://`: en ese caso `location.hostname` queda vacío, el módulo no lo considera entorno local, no usa `urlDesarrollo` y el asistente funciona solo en modo demostración, sin llamar a n8n. (Además, un origen `file://` no figura en la lista CORS.) El puerto 5500 es la configuración local concreta de Live Server y puede variar; si usás otro puerto, ajustá los orígenes permitidos (sección 4).
 3. Enviá una pregunta de prueba, como “¿Qué carreras ofrece el ISETA?”.
 
@@ -73,7 +80,7 @@ En PowerShell 5.1, pasar JSON con comillas dobles directamente a `curl.exe` las 
 curl.exe -s -X POST http://localhost:5678/webhook/iseta-asistente -H "Content-Type: application/json" --data-binary "@$env:TEMP\q.json"
 ```
 
-Resultados verificados con n8n 2.44.5 (ver también la comprobación automática abajo): "¿Qué es ISETA?", "¿Qué significa ISETA?" y "¿Qué es el ISETA?" → `ok` con la denominación correcta; listado de carreras y consultas por cada una → `ok` con fuente; duración, inscripción, planes, requisitos o aranceles → `insufficient_context`; consulta sin cobertura → `insufficient_context`; vacío, solo espacios o más de 500 caracteres → `invalid_input`; exactamente 500 caracteres se acepta. JSON mal formado no llega al workflow: n8n responde HTTP 422.
+Registro del 25/10/2026: el workflow local `DMFleutloX8wZOxW` fue actualizado y publicado. Las solicitudes HTTP reales y las páginas del frontend probadas están registradas en [docs/TEST_PLAN.md](../docs/TEST_PLAN.md). Esto no valida un backend público ni cambia el modo demostración del sitio publicado.
 
 ### Comprobación automática de conocimiento
 
@@ -83,7 +90,7 @@ Desde `n8n/` (no requiere n8n en ejecución):
 npm.cmd run comprobar
 ```
 
-El script ejecuta el código real del nodo de código del workflow y la lógica de demostración del HTML con las mismas consultas. Falla si las respuestas, estados o fuentes difieren, o si una consulta no devuelve el estado esperado. Las consultas están en `scripts/comprobar-conocimiento.mjs`; agregá allí cada caso nuevo.
+El script verifica que el archivo fuente `asistente-institucional-code.js` coincida con el nodo Code embebido en el workflow y ejecuta ese código con 92 preguntas funcionales y cinco entradas de límites/formato. Comprueba estado, texto esperado y fuentes oficiales; no requiere n8n en ejecución. Las consultas están en `scripts/comprobar-conocimiento.mjs`. No prueba el frontend ni actualiza ni valida el workflow activo.
 
 ## 3. Contrato de la API
 
@@ -146,19 +153,17 @@ No pongas la URL local en `urlProduccion`: cada visitante la interpretaría como
 
 - Las respuestas son reglas y textos de ejemplo; todavía no se usa un modelo de IA.
 - La base de conocimiento es pequeña y debe verificarse contra documentos institucionales vigentes antes de presentar el proyecto.
-- La misma base de conocimiento está en el workflow (nodo de código) y en `assets/asistente-institucional/asistente-institucional.js`. Para cambiarla, seguí el procedimiento de la sección siguiente.
+- La base ampliada se mantiene en `asistente-institucional-code.js` y se sincroniza con el JSON exportable. El modo demostración del frontend conserva una base anterior y acotada; no tiene paridad con el workflow.
 - La coincidencia es por palabras o frases listadas en `terms`. Una formulación distinta puede caer en "sin evidencia": por ejemplo, "¿Dónde queda el ISETA?" (la dirección no está cargada todavía). Ver [KNOWLEDGE_BASE.md](../docs/KNOWLEDGE_BASE.md) para el inventario verificado y lo pendiente.
 
-## Mantener sincronizados el workflow y el HTML
+## Mantener el workflow exportable
 
-La base de conocimiento no está centralizada: se mantiene en dos lugares, por diseño de esta etapa. Procedimiento para cambiarla:
+La fuente editable del nodo Code es `asistente-institucional-code.js`; no edites a mano el campo `jsCode` del JSON. Para actualizar la exportación:
 
-1. Editar el arreglo `knowledge`, la lista `unsupported` y sus textos **en ambos archivos**: el campo `jsCode` de `asistente-institucional-demo.json` y el bloque que va desde `const unsupported` hasta `function urlWebhook` (incluye `knowledge`) y la función `demoAnswer` de `assets/asistente-institucional/asistente-institucional.js`. Mantener los términos normalizados (sin tildes ni mayúsculas).
-2. Ejecutar `npm.cmd run comprobar` desde `n8n/`. Debe terminar con "Todas las comprobaciones pasaron".
-3. Si se agrega una consulta nueva, incluirla en `scripts/comprobar-conocimiento.mjs`.
-4. Reimportar y publicar el workflow (sección 1), reiniciar n8n y recargar la página del prototipo.
-
-Si el script falla con "difieren", los dos lados tienen textos o términos distintos: alinearlos antes de publicar.
+1. Editá la fuente de código y mantené los términos normalizados (sin tildes ni mayúsculas).
+2. Ejecutá `node scripts/sincronizar-workflow.mjs` desde `n8n/`.
+3. Agregá o ajustá los casos en `scripts/comprobar-conocimiento.mjs` y ejecutá `npm.cmd run comprobar`.
+4. La sincronización y las pruebas solo actualizan/verifican los archivos del repositorio. Importar y publicar el workflow activo es un paso aparte que requiere autorización; la suite no comprueba ese servicio ni sincroniza la demo del frontend.
 - El webhook de demo no tiene autenticación. No debe exponerse públicamente.
 - La lista de orígenes CORS es solo para desarrollo local; no debe copiarse sin revisión a un despliegue público. Si la instancia conserva `*`, cualquier sitio abierto en tu navegador puede consultar el webhook.
 - Si n8n no responde, la interfaz muestra un error y ofrece una respuesta de demostración claramente identificada como no proveniente de n8n.

@@ -252,7 +252,7 @@
     }
 
     const nota = crearElemento("p", "ia-nota");
-    nota.textContent = "El servicio conectado todavía no está configurado en esta versión del sitio. Las respuestas son de demostración y no consultan ningún servidor.";
+    nota.textContent = "Versión de demostración: las respuestas no consultan un servidor. No compartas datos personales.";
     nota.hidden = Boolean(urlWebhook());
 
     const mensajes = crearElemento("div", "ia-mensajes");
@@ -304,7 +304,7 @@
     ayuda.append(textoAyuda, contador);
     const feedback = crearElemento("p", "ia-feedback");
     feedback.id = ID + "-feedback";
-    feedback.setAttribute("role", "status");
+    feedback.setAttribute("role", "alert");
     formulario.append(etiqueta, entrada, ayuda, feedback);
 
     chat.append(encabezado, nota, mensajes, sugerencias, formulario);
@@ -411,9 +411,12 @@
 
     function marcarOcupado(ocupado) {
       enviando = ocupado;
-      botonEnviar.disabled = ocupado;
+      chat.setAttribute("aria-busy", String(ocupado));
       campo.disabled = ocupado;
       botonesSugerencia.forEach((boton) => { boton.disabled = ocupado; });
+      botonEnviar.disabled = ocupado || !campo.value.trim();
+      botonEnviar.setAttribute("aria-label", ocupado ? "Consultando información" : "Enviar consulta");
+      textoEnviar.textContent = ocupado ? "Consultando…" : "Enviar";
     }
 
     async function enviar(textoOriginal) {
@@ -451,6 +454,7 @@
         pendiente.remove();
         marcarOcupado(false);
         campo.focus();
+        sugerencias.hidden = true;
       }
     }
 
@@ -461,6 +465,7 @@
 
     campo.addEventListener("input", () => {
       contador.textContent = campo.value.length + "/" + CONFIGURACION.longitudMaxima;
+      botonEnviar.disabled = enviando || !campo.value.trim();
       limpiarError();
     });
 
@@ -472,7 +477,8 @@
     });
 
     marcarEstado(urlWebhook() ? "configurado" : "demo");
-    agregarMensaje("¡Hola! Soy el asistente institucional del ISETA. Puedo orientarte con la información disponible en este sitio. ¿Qué te gustaría saber?", "asistente", { textoMeta: "Asistente · respuesta inicial" });
+    botonEnviar.disabled = true;
+    agregarMensaje("Soy el asistente institucional del ISETA. Puedo orientar sobre carreras, horarios e información institucional publicada. Si no encuentro información suficiente, te lo voy a indicar.", "asistente", { textoMeta: "Asistente · respuesta inicial" });
 
     return {
       elemento: chat,
@@ -497,12 +503,13 @@
     panel.id = ID + "-panel";
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-labelledby", ID + "-titulo");
+    panel.setAttribute("aria-modal", "false");
     panel.hidden = true;
     const chat = crearChat({
       modo: "flotante",
       nivel: 2,
       titulo: "Asistente institucional",
-      subtitulo: "Consultá información pública del ISETA.",
+      subtitulo: "Información pública del ISETA.",
       onCerrar: () => cerrar()
     });
     panel.appendChild(chat.elemento);
@@ -520,8 +527,8 @@
     }
 
     lanzador.addEventListener("click", () => (panel.hidden ? abrir() : cerrar()));
-    panel.addEventListener("keydown", (evento) => {
-      if (evento.key === "Escape") {
+    document.addEventListener("keydown", (evento) => {
+      if (evento.key === "Escape" && !panel.hidden) {
         evento.preventDefault();
         cerrar();
       }

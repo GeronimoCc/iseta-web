@@ -13,7 +13,7 @@
   --ia-marca-oscura: #0d4656;
   --ia-marca-suave: #e7f2f4;
   --ia-foco: #e3a008;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: inherit;
   font-size: 16px;
   line-height: 1.5;
   color: var(--ia-tinta);
@@ -47,13 +47,13 @@
   min-height: 48px;
   padding: 0 18px 0 14px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 12px;
   background: var(--ia-marca);
   color: #fff;
   font-size: .92rem;
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 8px 22px rgb(13 70 86 / 28%);
+  box-shadow: 0 3px 12px rgb(13 70 86 / 18%);
   cursor: pointer;
 }
 
@@ -73,16 +73,16 @@
   left: 20px;
   bottom: 80px;
   z-index: 9000;
-  width: min(390px, calc(100vw - 40px));
+  width: min(410px, calc(100vw - 40px));
   height: min(600px, 72vh);
   display: flex;
   flex-direction: column;
   background: var(--ia-papel);
   border: 1px solid var(--ia-linea);
-  border-radius: 18px;
-  box-shadow: 0 16px 40px rgb(24 52 65 / 18%);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgb(24 52 65 / 15%);
   overflow: hidden;
-  animation: ia-aparecer .18s ease-out;
+  animation: ia-aparecer .14s ease-out;
 }
 
 .ia-panel[hidden] {
@@ -147,10 +147,10 @@
 }
 
 .ia-chat--pagina .ia-mensajes {
-  min-height: 310px;
+  min-height: 240px;
   max-height: 480px;
   padding: 22px 24px 12px;
-  gap: 16px;
+  gap: 18px;
 }
 
 .ia-chat--pagina .ia-sugerencias {
@@ -165,17 +165,17 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 18px 18px 16px;
+  padding: 17px 18px 15px;
   border-bottom: 1px solid var(--ia-linea);
 }
 
 .ia-avatar {
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  border-radius: 13px;
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 8px;
   background: var(--ia-marca-suave);
   color: var(--ia-marca);
 }
@@ -198,8 +198,9 @@
   color: var(--ia-tinta);
 }
 
-.ia-titulo:focus {
-  outline: none;
+.ia-titulo:focus-visible {
+  outline: 3px solid var(--ia-foco);
+  outline-offset: 4px;
 }
 
 .ia-subtitulo {
@@ -215,44 +216,26 @@
 }
 
 .ia-estado {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 10px;
-  padding: 5px 9px;
-  border-radius: 999px;
-  background: #edf7f0;
-  color: #426353;
-  font-size: .75rem;
-  font-weight: 650;
-}
-
-.ia-estado::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #39845c;
+  display: block;
+  margin-top: 7px;
+  color: var(--ia-suave);
+  font-size: .76rem;
+  line-height: 1.35;
 }
 
 .ia-estado--caido {
-  background: #fbeee9;
   color: #8a3b1f;
-}
-
-.ia-estado--caido::before {
-  background: #b5532c;
 }
 
 .ia-cerrar {
   display: grid;
   place-items: center;
   flex: 0 0 auto;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   margin-left: auto;
-  border: 1px solid var(--ia-linea);
-  border-radius: 10px;
+  border: 0;
+  border-radius: 8px;
   background: #fff;
   color: var(--ia-marca-oscura);
   cursor: pointer;
@@ -264,9 +247,10 @@
 
 .ia-nota {
   margin: 0;
-  padding: 10px 18px;
+  padding: 9px 18px;
   border-bottom: 1px solid var(--ia-linea);
-  background: #fff7e0;
+  border-left: 3px solid var(--ia-foco);
+  background: #fffaf0;
   color: #6b4d00;
   font-size: .8rem;
   line-height: 1.45;
@@ -275,14 +259,14 @@
 .ia-mensajes {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 17px;
   padding: 16px 18px 10px;
   overflow: auto;
   scroll-behavior: smooth;
 }
 
 .ia-mensaje {
-  max-width: 94%;
+  max-width: 92%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -295,18 +279,18 @@
 }
 
 .ia-burbuja {
-  padding: 11px 13px;
-  border-radius: 15px 15px 15px 5px;
-  background: #f0f4f5;
+  padding: 10px 12px;
+  border-radius: 3px 11px 11px 11px;
+  background: #f2f6f7;
   color: var(--ia-tinta);
-  font-size: .92rem;
-  line-height: 1.5;
+  font-size: .94rem;
+  line-height: 1.58;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 
 .ia-mensaje--usuario .ia-burbuja {
-  border-radius: 15px 15px 5px 15px;
+  border-radius: 11px 3px 11px 11px;
   background: var(--ia-marca);
   color: #fff;
 }
@@ -329,9 +313,10 @@
 
 .ia-accion,
 .ia-sugerencia {
-  padding: 7px 11px;
+  min-height: 40px;
+  padding: 8px 11px;
   border: 1px solid #bfd1d8;
-  border-radius: 999px;
+  border-radius: 6px;
   background: #fff;
   color: var(--ia-marca-oscura);
   font-size: .82rem;
@@ -374,19 +359,24 @@
 .ia-fuentes a {
   color: var(--ia-marca-oscura);
   text-underline-offset: 3px;
+  overflow-wrap: anywhere;
 }
 
 .ia-sugerencias {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 7px;
   padding: 0 18px 14px;
+}
+
+.ia-sugerencias[hidden] {
+  display: none;
 }
 
 .ia-formulario {
   padding: 14px 16px 16px;
   border-top: 1px solid var(--ia-linea);
-  background: #fbfdfd;
+  background: #fff;
 }
 
 .ia-entrada {
@@ -395,12 +385,12 @@
   gap: 10px;
   padding: 7px;
   border: 1px solid #bdcdd3;
-  border-radius: 15px;
+  border-radius: 9px;
   background: #fff;
 }
 
 .ia-entrada:focus-within {
-  outline: 3px solid rgb(227 160 8 / 30%);
+  outline: 3px solid rgb(227 160 8 / 35%);
   border-color: var(--ia-foco);
 }
 
@@ -432,7 +422,7 @@
   min-height: 42px;
   padding: 0 14px;
   border: 0;
-  border-radius: 11px;
+  border-radius: 7px;
   background: var(--ia-marca);
   color: #fff;
   font-weight: 700;
@@ -446,7 +436,7 @@
 .ia-enviar:disabled,
 .ia-pregunta:disabled {
   opacity: .55;
-  cursor: wait;
+  cursor: not-allowed;
 }
 
 .ia-icono {
@@ -534,7 +524,7 @@
   }
 
   .ia-chat--pagina .ia-mensajes {
-    min-height: 280px;
+    min-height: 210px;
     padding: 18px 16px 10px;
   }
 
@@ -544,6 +534,10 @@
 
   .ia-chat--pagina .ia-formulario {
     padding: 13px 13px 15px;
+  }
+
+  .ia-chat--pagina .ia-mensaje {
+    max-width: 100%;
   }
 
   .ia-enviar-texto {
