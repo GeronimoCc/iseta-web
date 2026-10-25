@@ -16,3 +16,6 @@
 | D-012 | Mantener el sitio de GitHub Pages separado de la integración local de n8n | Aceptada | Los visitantes de Pages no pueden usar la instancia local del desarrollador |
 | D-013 | No fusionar a `main` sin revisión del usuario | Aceptada | Preserva control de cambios |
 | D-014 | Actualizar los documentos en GitHub como fuente compartida | Aceptada | Evita que las instrucciones dependan solo de un Drive no conectado |
+| D-015 | Mantener `invalid_input` con HTTP 200 y JSON `answer/sources/status` (no usar 400) | Aceptada | `asistente-institucional.js` lanza un error genérico ante `!respuesta.ok` sin leer el cuerpo; con 400 el usuario no vería el mensaje específico. Cambiarlo exige modificar el workflow (código de respuesta) y el frontend a la vez |
+| D-016 | Quitar la palabra aislada «instituto» de las reglas de «¿Qué es ISETA?» (queda «qué es el instituto») | Aceptada | «¿Dónde queda el instituto?» se clasificaba como definición de ISETA; ahora se abstiene por falta de evidencia de ubicación |
+| D-017 | Responder explícitamente que aula virtual y webmail están fuera de alcance (estado `insufficient_context`) | Aceptada | Cumple T17 y D-010 sin inventar datos ni cambiar el contrato HTTP |

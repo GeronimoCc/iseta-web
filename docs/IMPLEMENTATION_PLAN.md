@@ -19,9 +19,19 @@
 2. Importar el JSON.
 3. Probar primero el webhook desde n8n.
 4. Servir el HTML mediante un servidor local (no asumir que abrir `file://` funcionará con CORS).
-5. Configurar la Test URL, probar una consulta y comprobar la respuesta.
-6. Activar el workflow y probar la Production URL local.
+5. Usar la Production URL del workflow publicado, probar una consulta y comprobar la respuesta.
+6. Restringir CORS a los orígenes locales de la interfaz y comprobar que otro origen no recibe permiso.
 7. No publicar el webhook.
+
+## Integración global del asistente
+
+Estado: implementada y verificada automáticamente. Ver el detalle en [TEST_PLAN.md](./TEST_PLAN.md).
+
+- [x] Módulo compartido (`assets/asistente-institucional/`) con una sola configuración de URL.
+- [x] Línea de inclusión en las 41 páginas públicas y en el prototipo.
+- [x] Comprobación del contenido de demostración adaptada al módulo compartido.
+- [ ] Revisión manual en un navegador real y en un teléfono.
+- [ ] Backend público con URL HTTPS para el modo conectado (`urlProduccion`).
 
 ## Fase 4 — Verificar conocimiento
 - Elegir 10–20 entradas iniciales de fuentes institucionales.

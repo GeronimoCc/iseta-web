@@ -61,3 +61,14 @@ Estados previstos: `ok`, `invalid_input`, `insufficient_context` y, si se decide
 
 ## 6. Evolución a IA remota
 La selección de proveedor no está cerrada. Antes de implementarla hay que revisar la disponibilidad actual de la capa gratuita, límites, retención y uso de datos. La llamada debe realizarse desde n8n usando credenciales protegidas. El modelo no debe recibir todo el repositorio, solo fragmentos públicos y pertinentes.
+
+## 7. Integración global en el sitio
+
+- **Módulo compartido:** `assets/asistente-institucional/asistente-institucional.js` contiene la lógica, la demostración, la conversación y el botón flotante. `asistente-institucional.css` contiene los estilos, con el prefijo `ia-` para no chocar con el tema del sitio. El script carga su propio CSS desde su ruta, por eso cada página solo necesita una línea.
+- **Inclusión:** antes de `</body>` de cada página pública HTML: `<script src="<ruta>/assets/asistente-institucional/asistente-institucional.js" defer></script>`. La ruta depende de la profundidad (`assets/` en la raíz, `../assets/` en `carreras/`, `../../assets/` en `carreras/tec-sup-en-.../`). El sitio se publica bajo `/iseta-web/` y no usa rutas absolutas, así que las rutas relativas son obligatorias.
+- **Páginas excluidas:** `feed/`, `comments/feed/` y `author/cueiseta/feed/` son fuentes RSS, y `wp-json/` es una API JSON. No son páginas que vea una persona visitante.
+- **Modo página:** el prototipo monta el mismo módulo dentro de `[data-iseta-asistente-pagina]`, sin botón flotante. Así no hay dos implementaciones.
+- **Sin duplicados:** si el script ya se cargó (`window.IsetaAsistente`) o ya existe `#iseta-asistente-raiz`, no vuelve a montar nada.
+- **Posición:** el botón va abajo a la izquierda. El widget de Chaty del sitio va abajo a la derecha. En pantallas de hasta 600 px el botón es circular y queda por encima de la franja de Chaty.
+- **Configuración:** un único objeto `CONFIGURACION` al inicio del módulo. `urlProduccion` está vacía, así que el sitio publicado funciona en modo demostración. `urlDesarrollo` solo se usa cuando la página se abre desde `localhost` o `127.0.0.1`. Ver [n8n/README.md](../n8n/README.md), sección 5.
+- **Agregar una página nueva:** copiar la línea `<script>` anterior ajustando la ruta relativa. No hace falta copiar HTML ni CSS.

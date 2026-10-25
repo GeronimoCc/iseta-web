@@ -31,36 +31,7 @@
     .brand-name { font-size: 1.12rem; font-weight: 750; letter-spacing: -.02em; margin: 0; }
     .layout { display: grid; grid-template-columns: minmax(0, 1fr) 245px; gap: 20px; align-items: start; }
     .chat-card, .side-card { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 8px 28px rgb(24 52 65 / 5%); }
-    .chat-head { padding: 22px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: flex-start; gap: 13px; }
-    .avatar { width: 42px; height: 42px; border-radius: 13px; display: grid; place-items: center; background: var(--brand-soft); color: var(--brand); flex: 0 0 42px; }
-    .avatar svg { width: 23px; height: 23px; }
-    h1 { margin: 0; font-size: 1.28rem; letter-spacing: -.035em; }
-    .subhead { margin: 6px 0 0; color: var(--muted); font-size: .92rem; line-height: 1.45; }
-    .status { display: inline-flex; align-items: center; gap: 7px; font-size: .75rem; font-weight: 650; color: #426353; background: #edf7f0; padding: 6px 9px; border-radius: 999px; margin-top: 11px; }
-    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #39845c; }
-    .messages { min-height: 310px; max-height: 480px; overflow: auto; padding: 22px 24px 12px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
-    .message { max-width: 94%; display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
-    .message.user { align-self: flex-end; align-items: flex-end; }
-    .bubble { padding: 12px 14px; border-radius: 15px 15px 15px 5px; background: #f0f4f5; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; font-size: .94rem; }
-    .user .bubble { background: var(--brand); color: white; border-radius: 15px 15px 5px 15px; }
-    .message-meta { font-size: .74rem; color: var(--muted); }
-    .sources { font-size: .82rem; color: var(--muted); line-height: 1.5; }
-    .sources strong { display: block; color: var(--ink); margin-bottom: 3px; }
-    .sources ul { margin: 0; padding-left: 18px; }
-    .sources a { text-underline-offset: 3px; }
-    .suggestions { padding: 0 24px 18px; display: flex; flex-wrap: wrap; gap: 8px; }
-    .suggestion { background: white; border: 1px solid #bfd1d8; color: var(--brand-dark); padding: 8px 11px; border-radius: 999px; cursor: pointer; font-size: .82rem; text-align: left; }
-    .suggestion:hover { background: var(--brand-soft); }
-    .composer { padding: 16px 20px 18px; border-top: 1px solid var(--line); background: #fbfdfd; border-radius: 0 0 var(--radius) var(--radius); }
-    .input-wrap { display: flex; align-items: flex-end; gap: 10px; border: 1px solid #bdcdd3; border-radius: 15px; padding: 8px; background: white; }
-    .input-wrap:focus-within { outline: 3px solid rgb(227 160 8 / 30%); border-color: var(--focus); }
-    textarea { resize: vertical; min-height: 44px; max-height: 130px; flex: 1; width: 100%; border: 0; outline: 0; padding: 10px 7px; color: var(--ink); background: transparent; line-height: 1.4; }
-    textarea::placeholder { color: #7a8991; }
-    .send { display: inline-flex; justify-content: center; align-items: center; gap: 7px; min-height: 42px; border: 0; border-radius: 11px; padding: 0 15px; background: var(--brand); color: white; font-weight: 700; cursor: pointer; }
-    .send:hover { background: var(--brand-dark); }
-    .send:disabled { opacity: .55; cursor: wait; }
-    .send svg { width: 17px; height: 17px; }
-    .help { display: flex; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .74rem; margin: 10px 3px 0; }
+    .chat-card { overflow: hidden; }
     .side-card { padding: 20px 18px; }
     .side-card h2 { font-size: .98rem; margin: 0 0 13px; letter-spacing: -.02em; }
     .side-card p, .side-card li { font-size: .86rem; color: var(--muted); line-height: 1.55; }
@@ -76,13 +47,6 @@
       .page { width: min(100% - 20px, 560px); padding-top: 16px; }
       .layout { grid-template-columns: 1fr; }
       .side-card { order: 2; }
-      .chat-head { padding: 19px 17px; }
-      .messages { padding: 18px 16px 10px; min-height: 280px; }
-      .suggestions { padding: 0 16px 16px; }
-      .composer { padding: 13px 13px 15px; }
-      .send .send-label { display: none; }
-      .send { width: 44px; padding: 0; flex: 0 0 44px; }
-      .help { flex-direction: column; gap: 4px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
   </style>
@@ -92,48 +56,14 @@
     <header class="masthead">
       <div class="mark" aria-hidden="true">ISETA</div>
       <div>
-        <p class="institution">Instituto Experimental de Tecnología Alimentaria</p>
+        <p class="institution">Instituto Superior Experimental de Tecnología Alimentaria</p>
         <p class="brand-name">Asistente institucional</p>
       </div>
     </header>
 
     <div class="layout">
-      <section class="chat-card" aria-labelledby="page-title">
-        <header class="chat-head">
-          <div class="avatar" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a8 8 0 0 0-8 8v3a2 2 0 0 0 2 2h1v-6H5"/><path d="M20 10h-2v6h1a2 2 0 0 0 2-2v-3a8 8 0 0 0-8-8"/><path d="M8 19c1 .8 2.3 1.2 4 1.2h2"/></svg>
-          </div>
-          <div>
-            <h1 id="page-title">¿En qué te puedo ayudar?</h1>
-            <p class="subhead">Consultá información institucional y orientate entre las secciones del sitio.</p>
-            <span class="status" id="mode-status">Modo demostración</span>
-          </div>
-        </header>
-
-        <div class="messages" id="messages" role="log" aria-live="polite" aria-relevant="additions text">
-          <article class="message">
-            <div class="bubble">¡Hola! Soy el asistente institucional del ISETA. Puedo orientarte con la información disponible en este sitio. ¿Qué te gustaría saber?</div>
-            <span class="message-meta">Asistente · respuesta inicial</span>
-          </article>
-        </div>
-
-        <div class="suggestions" aria-label="Preguntas sugeridas">
-          <button class="suggestion" type="button">¿Qué carreras ofrece el ISETA?</button>
-          <button class="suggestion" type="button">¿Dónde encuentro los horarios?</button>
-          <button class="suggestion" type="button">¿Qué es el ISETA?</button>
-        </div>
-
-        <form class="composer" id="chat-form">
-          <label class="sr-only" for="question">Escribí tu consulta</label>
-          <div class="input-wrap">
-            <textarea id="question" name="question" rows="1" maxlength="500" placeholder="Escribí tu consulta…" required></textarea>
-            <button class="send" id="send-button" type="submit" aria-label="Enviar consulta">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
-              <span class="send-label">Enviar</span>
-            </button>
-          </div>
-          <div class="help"><span>Máximo 500 caracteres. No compartas datos personales.</span><span id="char-count">0/500</span></div>
-        </form>
+      <section class="chat-card" aria-label="Conversación con el asistente">
+        <div data-iseta-asistente-pagina></div>
       </section>
 
       <aside class="side-card" aria-labelledby="about-title">
@@ -155,166 +85,6 @@
     </footer>
   </main>
 
-  <script>
-    /*
-      Integración local:
-      1. Configurá la URL del webhook de n8n en N8N_WEBHOOK_URL.
-      2. El webhook debe aceptar POST JSON { "message": "..." }.
-      3. Respuesta esperada: { "answer": "...", "sources": [{ "title": "...", "url": "https://..." }], "status": "ok" }.
-      Nunca pongas claves de proveedores de IA en este archivo.
-      Si la URL queda vacía, se usa el modo demostración sin llamadas externas.
-    */
-    const N8N_WEBHOOK_URL = "";
-
-    const knowledge = [
-      {
-        terms: ["carrera", "carreras", "analisis de sistemas", "análisis de sistemas", "estudiar"],
-        answer: "El sitio del ISETA incluye una sección de carreras y una página dedicada a la Tecnicatura Superior en Análisis de Sistemas. Para confirmar la oferta académica vigente y sus condiciones, consultá la página institucional.",
-        sources: [{ title: "Tec. Sup. en Análisis de Sistemas", url: "https://iseta.edu.ar/iseta/carreras/tec-sup-en-analisis-de-sistemas/" }]
-      },
-      {
-        terms: ["horario", "horarios", "cronograma"],
-        answer: "El sitio dispone de una sección de Horarios. Revisá esa página para consultar la información publicada; este prototipo no puede confirmar si el cronograma tuvo cambios recientes.",
-        sources: [{ title: "Horarios", url: "https://iseta.edu.ar/iseta/horarios/" }]
-      },
-      {
-        terms: ["que es iseta", "qué es iseta", "instituto", "quienes son", "quiénes son", "sobre iseta"],
-        answer: "ISETA significa Instituto Experimental de Tecnología Alimentaria. La sección institucional del sitio presenta información sobre el instituto y su identidad.",
-        sources: [{ title: "¿Quiénes somos?", url: "https://iseta.edu.ar/iseta/institucionales/quienes-somos/" }]
-      }
-    ];
-
-    const form = document.getElementById("chat-form");
-    const input = document.getElementById("question");
-    const messages = document.getElementById("messages");
-    const sendButton = document.getElementById("send-button");
-    const charCount = document.getElementById("char-count");
-    const modeStatus = document.getElementById("mode-status");
-
-    if (N8N_WEBHOOK_URL.trim()) modeStatus.textContent = "Conexión con n8n configurada";
-
-    function normalize(text) {
-      return text.toLocaleLowerCase("es").normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-    }
-
-    function addMessage(text, role, sources = []) {
-      const article = document.createElement("article");
-      article.className = "message" + (role === "user" ? " user" : "");
-      const bubble = document.createElement("div");
-      bubble.className = "bubble";
-      bubble.textContent = text;
-      article.appendChild(bubble);
-
-      if (sources.length) {
-        const sourceBox = document.createElement("div");
-        sourceBox.className = "sources";
-        const heading = document.createElement("strong");
-        heading.textContent = "Fuentes";
-        sourceBox.appendChild(heading);
-        const list = document.createElement("ul");
-        sources.forEach((source) => {
-          if (!source || typeof source.title !== "string" || typeof source.url !== "string") return;
-          try {
-            const parsed = new URL(source.url);
-            if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return;
-            const item = document.createElement("li");
-            const link = document.createElement("a");
-            link.href = parsed.href;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            link.textContent = source.title;
-            item.appendChild(link);
-            list.appendChild(item);
-          } catch { /* Omite fuentes con URL inválida. */ }
-        });
-        if (list.childElementCount) {
-          sourceBox.appendChild(list);
-          article.appendChild(sourceBox);
-        }
-      }
-
-      const meta = document.createElement("span");
-      meta.className = "message-meta";
-      meta.textContent = role === "user" ? "Vos" : "Asistente";
-      article.appendChild(meta);
-      messages.appendChild(article);
-      messages.scrollTop = messages.scrollHeight;
-    }
-
-    function demoAnswer(question) {
-      const normalized = normalize(question);
-      const found = knowledge.find(entry => entry.terms.some(term => normalized.includes(normalize(term))));
-      if (found) return { answer: found.answer, sources: found.sources, status: "ok" };
-      return {
-        answer: "No tengo información verificada suficiente para responder esa consulta en este prototipo. Probá con una pregunta sobre carreras, horarios o información institucional, o consultá directamente el sitio del ISETA.",
-        sources: [{ title: "Sitio institucional del ISETA", url: "https://iseta.edu.ar/iseta/" }],
-        status: "insufficient_context"
-      };
-    }
-
-    async function getAnswer(question) {
-      if (!N8N_WEBHOOK_URL.trim()) return demoAnswer(question);
-      const response = await fetch(N8N_WEBHOOK_URL, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain;charset=UTF-8" },
-        body: JSON.stringify({ message: question })
-      });
-      if (!response.ok) throw new Error("El servicio respondió con estado " + response.status);
-      const data = await response.json();
-      if (!data || typeof data.answer !== "string" || !data.answer.trim()) {
-        throw new Error("La respuesta del servicio no tiene el formato esperado.");
-      }
-      return {
-        answer: data.answer,
-        sources: Array.isArray(data.sources) ? data.sources : [],
-        status: typeof data.status === "string" ? data.status : "ok"
-      };
-    }
-
-    async function submitQuestion(rawQuestion) {
-      const question = rawQuestion.trim();
-      if (!question || sendButton.disabled) return;
-      if (question.length > 500) {
-        addMessage("La consulta supera el límite de 500 caracteres. Acortala e intentá de nuevo.", "assistant");
-        return;
-      }
-      addMessage(question, "user");
-      input.value = "";
-      charCount.textContent = "0/500";
-      sendButton.disabled = true;
-      input.disabled = true;
-      try {
-        const result = await getAnswer(question);
-        addMessage(result.answer, "assistant", result.sources);
-      } catch (error) {
-        addMessage("En este momento no puedo procesar la consulta. Intentá nuevamente más tarde o consultá el sitio institucional. No se enviaron claves desde el navegador.", "assistant");
-        console.error("Error consultando el asistente:", error);
-      } finally {
-        sendButton.disabled = false;
-        input.disabled = false;
-        input.focus();
-      }
-    }
-
-    form.addEventListener("submit", event => {
-      event.preventDefault();
-      submitQuestion(input.value);
-    });
-
-    document.querySelectorAll(".suggestion").forEach(button => {
-      button.addEventListener("click", () => submitQuestion(button.textContent));
-    });
-
-    input.addEventListener("input", () => {
-      charCount.textContent = input.value.length + "/500";
-    });
-
-    input.addEventListener("keydown", event => {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        form.requestSubmit();
-      }
-    });
-  </script>
+  <script src="../assets/asistente-institucional/asistente-institucional.js" defer></script>
 </body>
 </html>

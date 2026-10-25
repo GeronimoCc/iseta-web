@@ -1,0 +1,573 @@
+/*
+  Asistente institucional ISETA: estilos compartidos.
+  Todas las clases llevan el prefijo ia- para no chocar con los estilos del tema del sitio.
+*/
+
+.ia-raiz,
+.ia-chat {
+  --ia-tinta: #172b3a;
+  --ia-suave: #5d6d78;
+  --ia-linea: #dce5e9;
+  --ia-papel: #ffffff;
+  --ia-marca: #145d70;
+  --ia-marca-oscura: #0d4656;
+  --ia-marca-suave: #e7f2f4;
+  --ia-foco: #e3a008;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ia-tinta);
+  text-align: left;
+}
+
+.ia-chat button,
+.ia-raiz button,
+.ia-chat textarea {
+  font-family: inherit;
+}
+
+.ia-chat :focus-visible,
+.ia-raiz :focus-visible {
+  outline: 3px solid var(--ia-foco);
+  outline-offset: 2px;
+}
+
+/* Botón flotante, inferior izquierda: el widget de Chaty del sitio queda a la derecha. */
+.ia-raiz {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 9000;
+}
+
+.ia-lanzador {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 0 18px 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ia-marca);
+  color: #fff;
+  font-size: .92rem;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 8px 22px rgb(13 70 86 / 28%);
+  cursor: pointer;
+}
+
+.ia-lanzador:hover,
+.ia-lanzador[aria-expanded="true"] {
+  background: var(--ia-marca-oscura);
+}
+
+.ia-lanzador .ia-icono {
+  width: 22px;
+  height: 22px;
+}
+
+/* Panel flotante. Se posiciona en position: fixed para no depender del diseño de cada página. */
+.ia-panel {
+  position: fixed;
+  left: 20px;
+  bottom: 80px;
+  z-index: 9000;
+  width: min(390px, calc(100vw - 40px));
+  height: min(600px, 72vh);
+  display: flex;
+  flex-direction: column;
+  background: var(--ia-papel);
+  border: 1px solid var(--ia-linea);
+  border-radius: 18px;
+  box-shadow: 0 16px 40px rgb(24 52 65 / 18%);
+  overflow: hidden;
+  animation: ia-aparecer .18s ease-out;
+}
+
+.ia-panel[hidden] {
+  display: none;
+}
+
+@keyframes ia-aparecer {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.ia-chat--flotante {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.ia-chat--flotante .ia-mensajes {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.ia-chat--flotante .ia-encabezado,
+.ia-chat--flotante .ia-sugerencias,
+.ia-chat--flotante .ia-formulario,
+.ia-chat--flotante .ia-nota {
+  flex: 0 0 auto;
+}
+
+.ia-chat--flotante .ia-encabezado {
+  padding: 16px 16px 14px;
+}
+
+.ia-chat--flotante .ia-titulo {
+  font-size: 1.05rem;
+}
+
+.ia-chat--flotante .ia-mensajes {
+  padding: 14px 16px 10px;
+}
+
+.ia-chat--flotante .ia-sugerencias {
+  padding: 0 16px 12px;
+}
+
+.ia-chat--flotante .ia-formulario {
+  padding: 12px 14px 14px;
+}
+
+/* Conversación dentro de una página (prototipo). */
+.ia-chat--pagina .ia-encabezado {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--ia-linea);
+}
+
+.ia-chat--pagina .ia-titulo {
+  font-size: 1.28rem;
+}
+
+.ia-chat--pagina .ia-mensajes {
+  min-height: 310px;
+  max-height: 480px;
+  padding: 22px 24px 12px;
+  gap: 16px;
+}
+
+.ia-chat--pagina .ia-sugerencias {
+  padding: 0 24px 18px;
+}
+
+.ia-chat--pagina .ia-formulario {
+  padding: 16px 20px 18px;
+}
+
+.ia-encabezado {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px 18px 16px;
+  border-bottom: 1px solid var(--ia-linea);
+}
+
+.ia-avatar {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  border-radius: 13px;
+  background: var(--ia-marca-suave);
+  color: var(--ia-marca);
+}
+
+.ia-avatar .ia-icono {
+  width: 23px;
+  height: 23px;
+}
+
+.ia-encabezado-texto {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ia-titulo {
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.25;
+  letter-spacing: -.03em;
+  color: var(--ia-tinta);
+}
+
+.ia-titulo:focus {
+  outline: none;
+}
+
+.ia-subtitulo {
+  margin: 5px 0 0;
+  font-size: .88rem;
+  line-height: 1.45;
+  color: var(--ia-suave);
+}
+
+.ia-subtitulo[hidden],
+.ia-nota[hidden] {
+  display: none;
+}
+
+.ia-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: #edf7f0;
+  color: #426353;
+  font-size: .75rem;
+  font-weight: 650;
+}
+
+.ia-estado::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #39845c;
+}
+
+.ia-estado--caido {
+  background: #fbeee9;
+  color: #8a3b1f;
+}
+
+.ia-estado--caido::before {
+  background: #b5532c;
+}
+
+.ia-cerrar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  margin-left: auto;
+  border: 1px solid var(--ia-linea);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ia-marca-oscura);
+  cursor: pointer;
+}
+
+.ia-cerrar:hover {
+  background: var(--ia-marca-suave);
+}
+
+.ia-nota {
+  margin: 0;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--ia-linea);
+  background: #fff7e0;
+  color: #6b4d00;
+  font-size: .8rem;
+  line-height: 1.45;
+}
+
+.ia-mensajes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 18px 10px;
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+.ia-mensaje {
+  max-width: 94%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.ia-mensaje--usuario {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.ia-burbuja {
+  padding: 11px 13px;
+  border-radius: 15px 15px 15px 5px;
+  background: #f0f4f5;
+  color: var(--ia-tinta);
+  font-size: .92rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ia-mensaje--usuario .ia-burbuja {
+  border-radius: 15px 15px 5px 15px;
+  background: var(--ia-marca);
+  color: #fff;
+}
+
+.ia-mensaje--pendiente .ia-burbuja {
+  color: var(--ia-suave);
+  font-style: italic;
+}
+
+.ia-meta {
+  font-size: .74rem;
+  color: var(--ia-suave);
+}
+
+.ia-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ia-accion,
+.ia-sugerencia {
+  padding: 7px 11px;
+  border: 1px solid #bfd1d8;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ia-marca-oscura);
+  font-size: .82rem;
+  line-height: 1.3;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ia-accion:hover,
+.ia-sugerencia:hover {
+  background: var(--ia-marca-suave);
+}
+
+.ia-sugerencia:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.ia-sugerencia:disabled:hover {
+  background: #fff;
+}
+
+.ia-fuentes {
+  font-size: .82rem;
+  line-height: 1.5;
+  color: var(--ia-suave);
+}
+
+.ia-fuentes strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ia-tinta);
+}
+
+.ia-fuentes ul {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.ia-fuentes a {
+  color: var(--ia-marca-oscura);
+  text-underline-offset: 3px;
+}
+
+.ia-sugerencias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 18px 14px;
+}
+
+.ia-formulario {
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--ia-linea);
+  background: #fbfdfd;
+}
+
+.ia-entrada {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 7px;
+  border: 1px solid #bdcdd3;
+  border-radius: 15px;
+  background: #fff;
+}
+
+.ia-entrada:focus-within {
+  outline: 3px solid rgb(227 160 8 / 30%);
+  border-color: var(--ia-foco);
+}
+
+.ia-pregunta {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  min-height: 42px;
+  max-height: 120px;
+  resize: vertical;
+  padding: 9px 7px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--ia-tinta);
+  font-size: .95rem;
+  line-height: 1.4;
+}
+
+.ia-pregunta::placeholder {
+  color: #7a8991;
+}
+
+.ia-enviar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--ia-marca);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ia-enviar:hover {
+  background: var(--ia-marca-oscura);
+}
+
+.ia-enviar:disabled,
+.ia-pregunta:disabled {
+  opacity: .55;
+  cursor: wait;
+}
+
+.ia-icono {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+}
+
+.ia-ayuda {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin: 9px 3px 0;
+  font-size: .74rem;
+  color: var(--ia-suave);
+}
+
+.ia-feedback {
+  min-height: 1.3em;
+  margin: 5px 3px 0;
+  font-size: .8rem;
+  color: var(--ia-suave);
+}
+
+.ia-feedback--error {
+  font-weight: 650;
+  color: #9b2c1c;
+}
+
+.ia-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 600px) {
+  /* Por encima de la franja de Chaty (WhatsApp y su globo "Contactanos!"), que ocupa la parte inferior. */
+  .ia-raiz {
+    left: 12px;
+    bottom: 88px;
+  }
+
+  .ia-lanzador {
+    width: 52px;
+    height: 52px;
+    min-height: 52px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .ia-lanzador .ia-icono {
+    width: 24px;
+    height: 24px;
+  }
+
+  .ia-lanzador-texto {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  .ia-panel {
+    left: 12px;
+    right: 12px;
+    bottom: 150px;
+    width: auto;
+    height: min(560px, 70vh);
+  }
+
+  .ia-chat--flotante .ia-subtitulo {
+    display: none;
+  }
+
+  .ia-chat--pagina .ia-encabezado {
+    padding: 19px 17px;
+  }
+
+  .ia-chat--pagina .ia-mensajes {
+    min-height: 280px;
+    padding: 18px 16px 10px;
+  }
+
+  .ia-chat--pagina .ia-sugerencias {
+    padding: 0 16px 16px;
+  }
+
+  .ia-chat--pagina .ia-formulario {
+    padding: 13px 13px 15px;
+  }
+
+  .ia-enviar-texto {
+    display: none;
+  }
+
+  .ia-enviar {
+    width: 44px;
+    padding: 0;
+    flex: 0 0 44px;
+  }
+
+  .ia-ayuda {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ia-panel {
+    animation: none;
+  }
+
+  .ia-mensajes {
+    scroll-behavior: auto;
+  }
+}
