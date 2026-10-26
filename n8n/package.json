@@ -1,0 +1,16 @@
+{
+  "name": "iseta-asistente-n8n",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Instalación local de n8n para el prototipo de asistente institucional ISETA",
+  "engines": {
+    "node": ">=24.0.0 <25"
+  },
+  "scripts": {
+    "n8n": "node start-n8n.mjs",
+    "comprobar": "node scripts/comprobar-conocimiento.mjs"
+  },
+  "dependencies": {
+    "n8n": "2.44.5"
+  }
+}
